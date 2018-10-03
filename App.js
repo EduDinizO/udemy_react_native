@@ -1,37 +1,64 @@
 import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 
-import PlaceInput from './src/components/PlaceInput/PlaceInput';
 import PlaceList from './src/components/PlaceList/PlaceList';
+import PlaceDetail from './src/components/PlaceDetail/PlaceDetail';
+import PlaceInput from './src/components/PlaceInput/PlaceInput';
+import placeImage from './assets/beautiful-place.jpg';
 
 export default class App extends React.Component {
     state = {
-        places: []
+        places: [],
+        selectedPlace: null
     };
 
     placeAddedHandler = placeName => {
         this.setState(prevState => {
             return {
-                places: prevState.places.concat(placeName)
-            }
+                places: prevState.places.concat(
+                    {
+                        key: Math.random().toString(),
+                        name: placeName,
+                        image: placeImage
+                    }
+                )
+            };
         });
     };
 
-    placeDeletedHandler = index => {
+    placeSelectedHandler = key => {
         this.setState(prevState => {
             return {
-                places: prevState.places.filter((place, i) => {
-                   return  i !== index;
+                selectedPlace: prevState.places.find(place => {
+                    return place.key === key
                 })
-            }
+            };
+        });
+    };
+
+    placeDeletedHandler = () => {
+        this.setState(prevState => {
+            return {
+                places: prevState.places.filter(place => {
+                    return place.key !== prevState.selectedPlace.key;
+                }),
+                selectedPlace: null
+            };
+        });
+    };
+
+    modalClosedHandler = () => {
+        this.setState({
+            selectedPlace: null
         });
     };
 
     render() {
         return (
             <View style={styles.container}>
+                <PlaceDetail selectedPlace={this.state.selectedPlace} onItemDeleted={this.placeDeletedHandler} onModalClosed={this.modalClosedHandler}/>
                 <PlaceInput onPlaceAdded={this.placeAddedHandler}/>
-                <PlaceList places={this.state.places} onItemDeleted={this.placeDeletedHandler}/>
+                <PlaceList places={this.state.places} onItemSelected={this.placeSelectedHandler}/>
             </View>
         );
     };
@@ -43,6 +70,6 @@ const styles = StyleSheet.create({
         padding: 25,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-start'
     }
 });
