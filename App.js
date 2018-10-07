@@ -6,7 +6,7 @@ import PlaceDetail from './src/components/PlaceDetail/PlaceDetail';
 import PlaceInput from './src/components/PlaceInput/PlaceInput';
 import placeImage from './assets/beautiful-place.jpg';
 
-export default class App extends React.Component {
+export default class App extends Component {
     state = {
         places: [],
         selectedPlace: null
