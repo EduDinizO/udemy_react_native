@@ -1,3 +1,6 @@
 node_modules/**/*
 .expo/*
 npm-debug.*
+.expo/
+.idea/
+node_modules/
